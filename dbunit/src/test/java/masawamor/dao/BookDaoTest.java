@@ -60,16 +60,12 @@ public class BookDaoTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-//		XmlDataSet dataSet = readXmlDataSet("resources/BookDao/actual.xml");
-//		//FlatXmlDataSet dataSet = new FlatXmlDataSet(new FileInputStream("resources/BookDaoTset/actual.xml"));
-//		databaseTester.setDataSet(dataSet);
-//		databaseTester.onSetup();
-		
-	   FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
-	   builder.setColumnSensing(true);
-	   IDataSet dataSet = builder.build(new File("src/test/resources/BookDao/actual.xml"));
-	   databaseTester.setDataSet(dataSet);
-	   databaseTester.onSetup();
+		// DBにデータ投入
+		FlatXmlDataSetBuilder builder = new FlatXmlDataSetBuilder();
+		builder.setColumnSensing(true);
+		IDataSet dataSet = builder.build(new File("src/test/resources/BookDao/actual.xml"));
+		databaseTester.setDataSet(dataSet);
+		databaseTester.onSetup();
 	}
 
 	@AfterEach
@@ -80,7 +76,7 @@ public class BookDaoTest {
 	public void test() throws Exception {
 		System.out.println("@1");
 		Connection conn = connection.getConnection();
-		Book book = new BookDao(conn).findById(1);
+		Book book = new BookDao(conn).findById(2);
 		System.out.println("@2");
 	}
 	

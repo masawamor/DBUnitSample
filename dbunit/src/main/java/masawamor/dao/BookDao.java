@@ -42,6 +42,7 @@ public class BookDao {
 		
 		String sql = "SELECT id, title FROM books WHERE id = ?";
 		
+		// https://www.codejava.net/java-se/jdbc/how-to-use-scrollable-result-sets-with-jdbc
 		PreparedStatement pstmt = this.conn.prepareStatement(
 				sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		pstmt.setInt(1, id);
