@@ -18,7 +18,7 @@ public class BookDao {
 
 	public boolean insert(Book book) throws Exception {
 		
-		String sql = "INSERT INTO (id, title, authorId) VALUES (?, ?, ?);";
+		String sql = "INSERT INTO (id, title) VALUES (?, ?, ?);";
 		
 		PreparedStatement pstmt = this.conn.prepareStatement(sql);
 		pstmt.setInt(1, book.getId());
@@ -38,18 +38,21 @@ public class BookDao {
 		
 	}
 	
-	public Book selectOne(int id) throws Exception {
+	public Book findById(int id) throws Exception {
 		
-		String sql = "SELECT id, title, authorId FROM books WHERE id = ?";
-
-		PreparedStatement pstmt = this.conn.prepareStatement(sql);
+		String sql = "SELECT id, title FROM books WHERE id = ?";
+		
+		PreparedStatement pstmt = this.conn.prepareStatement(
+				sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		pstmt.setInt(1, id);
 		
 		ResultSet rs = pstmt.executeQuery();
 		
 		List<Book> books = new ArrayList<Book>();
 		
-		rs.next();
+		if (getCountResult(rs) == 0) {
+			return null;
+		}
 		
 		Book book = new Book();
 		book.setId(rs.getInt("id"));
@@ -60,13 +63,18 @@ public class BookDao {
 	
 	public List<Book> selectAll() throws Exception {
 		
-		String sql = "SELECT id, title, authorId FROM books";
+		String sql = "SELECT id, title FROM books";
 
-		PreparedStatement pstmt = this.conn.prepareStatement(sql);
+		PreparedStatement pstmt = this.conn.prepareStatement(
+				sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		
 		ResultSet rs = pstmt.executeQuery();
 		
 		List<Book> books = new ArrayList<Book>();
+		
+		if (getCountResult(rs) == 0) {
+			return books;
+		}
 		
 		while (rs.next()) {
 			Book book = new Book();
@@ -77,5 +85,12 @@ public class BookDao {
 		}
 		
 		return books;
+	}
+	
+	private int getCountResult(ResultSet rs) throws Exception {
+		rs.last();
+		int count = rs.getRow();
+		rs.first();
+		return count;
 	}
 }
