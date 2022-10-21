@@ -1,0 +1,18 @@
+<dataset>
+    <table name="books">
+        <column>id</column>
+        <column>title</column>
+        <row>
+            <value>1</value>
+            <value>title1</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>title2</value>
+        </row>
+        <row>
+            <value>3</value>
+            <value>title3</value>
+        </row>
+    </table>
+</dataset>
