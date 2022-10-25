@@ -1,17 +1,16 @@
 package masawamor.dao;
 
 import java.io.File;
-import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
+import org.h2.tools.RunScript;
 import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -33,7 +32,7 @@ public class BookDaoTest {
 	
 	@BeforeClass
     public static void createSchema() throws Exception {
-        //RunScript.execute(URL, USER, PASSWORD, "resources/schema.sql", Charset.forName("UTF-8"), false);
+        //RunScript.execute(URL, USER, PASSWORD, "src/test/resources/schema.sql", Charset.forName("UTF-8"), false);
         // UTF8の定数がなぜかないのでベタで、Charset.forName("UTF-8")
         // https://jar-download.com/artifacts/com.h2database/h2/1.4.189/source-code/org/h2/engine/Constants.java
 	}
@@ -44,11 +43,7 @@ public class BookDaoTest {
 		databaseTester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
 		connection = databaseTester.getConnection();
 		
-		// TODO createSchemaメソッドでやるべきと思うが、うまくいかないのでとりあえずここで
-		PreparedStatement pstmt = connection.getConnection().prepareStatement(
-				"CREATE TABLE books (id int, title varchar);"
-				);
-		pstmt.execute();
+		RunScript.execute(URL, USER, PASSWORD, "src/test/resources/schema.sql", Charset.forName("UTF-8"), false);
 	}
 
 	@AfterAll
@@ -80,10 +75,10 @@ public class BookDaoTest {
 		System.out.println("@2");
 	}
 	
-	private XmlDataSet readXmlDataSet(String path) throws Exception {
-		try (InputStream istream = getClass().getResourceAsStream(path)) {
-			return new XmlDataSet(istream);
-		}
-	}
+//	private XmlDataSet readXmlDataSet(String path) throws Exception {
+//		try (InputStream istream = getClass().getResourceAsStream(path)) {
+//			return new XmlDataSet(istream);
+//		}
+//	}
 
 }
